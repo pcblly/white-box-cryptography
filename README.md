@@ -35,7 +35,7 @@ g++ -g -O2 -std=c++11 -pthread -march=native main.cpp ../lib/*.cpp -o main -I ..
 bash ./main
 ```
 
-**2 攻击**
+**2. 碰撞攻击**
 
 ```shell
 #编译
