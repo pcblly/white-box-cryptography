@@ -15,7 +15,7 @@
 | OS       | Ubuntu 20.04LTS                         |
 | Kernel   | 5.13.0-30-generic                       |
 | CPU      | Intel(R) Core(TM) i7-8550U CPU @1.80GHZ |
-| G++      |                                         |
+| G++      | 9.4.0                                   |
 | NTL      | 11.5.1                                  |
 
 > [NTL 是一个高性能、可移植的 C++ 库，为任意长度的整数提供数据结构和算法；用于整数和有限域上的向量、矩阵和多项式；以及任意精度的浮点运算。](https://libntl.org/doc/tour-intro.html)
