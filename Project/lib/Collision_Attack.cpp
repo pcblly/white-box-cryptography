@@ -6,7 +6,6 @@
 #include <cmath>
 
 #include "DualCiphers.h"
-//#include "sm4_key.h"
 #include "sm4_function.h"
 #include "stdlib.h"
 #include "time.h"
@@ -69,9 +68,93 @@ void coll()
        delete [] out_array2;
    }
    */
-
-
 }
+
+static mat_GF2 ui0_ci_test[32][255];
+static mat_GF2 ui1_ci_test[32][255];
+static mat_GF2 ui2_ci_test[32][255];
+static mat_GF2 ui3_ci_test[32][255];
+
+
+
+void coll_test()
+{
+    unsigned char key[16] =
+    {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0xfe,0xdc,0xba,0x98,0x76,0x54,0x32,0x10};
+    unsigned char plain[16]=
+    {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0xfe,0xdc,0xba,0x98,0x76,0x54,0x32,0x10};
+    cout << "输入密钥为:"<< endl ;
+    printstate_sm4(key);
+    mat_GF2 * Oi = oi_matrix(); 
+    wbsm4_gen(Oi,key);
+    mat_GF2* temp = Produce_temp(); 
+
+    uint8_t x = 0;
+    mat_GF2 x1 = transpose(matGF2FromUint8(x));//00000000
+    //cout << x1 << endl;
+
+    
+    mat_GF2 *out_array1,*out_array2;
+    mat_GF2 B1,B2,B3,dop;
+
+
+    B1 = setup_matB1();
+    B2 = setup_matB2();
+    B3 = setup_matB3();
+
+
+
+    for(int t=0;t<32;t++)
+    {
+        for(int m=0;m<255;m++)
+        {
+            out_array1 = collision_function_ceshi(t,temp[m],x1,x1,x1);
+            out_array2 = collision_function_ceshi(t,x1,x1,x1,x1);
+            dop = out_array1[0] + out_array2[0];//1x8
+            ui0_ci_test[t][m] = dop * inv(B1);
+        }
+    }
+
+    for(int t=0;t<32;t++)
+    {
+        for(int m=0;m<255;m++)
+        {
+            out_array1 = collision_function_ceshi(t,x1,temp[m],x1,x1);
+            out_array2 = collision_function_ceshi(t,x1,x1,x1,x1);
+            dop = out_array1[1] + out_array2[1];//1x8
+            ui1_ci_test[t][m] = dop * inv(B1);
+        }
+    }
+
+    for(int t=0;t<32;t++)
+    {
+        for(int m=0;m<255;m++)
+        {
+            out_array1 = collision_function_ceshi(t,x1,x1,temp[m],x1);
+            out_array2 = collision_function_ceshi(t,x1,x1,x1,x1);
+            dop = out_array1[2] + out_array2[2];//1x8
+            ui2_ci_test[t][m] = dop * inv(B1);
+        }
+    }
+
+    for(int t=0;t<32;t++)
+    {
+        for(int m=0;m<255;m++)
+        {
+            out_array1 = collision_function_ceshi(t,x1,x1,x1,temp[m]);
+            out_array2 = collision_function_ceshi(t,x1,x1,x1,x1);
+            dop = out_array1[3] + out_array2[3];//1x8
+            ui3_ci_test[t][m] = dop * inv(B1);
+        }
+    }
+
+
+
+
+   
+}
+
+
 
 
 static mat_GF2 Sbox_huifu[32][4][256];
@@ -83,7 +166,6 @@ void huifuSBOX()
 
     mat_GF2 u1_ci,x1,dfp;
     static mat_GF2 um_ceshi0[32][256][255],um_ceshi1[32][256][255],um_ceshi2[32][256][255],um_ceshi3[32][256][255];
-    static mat_GF2 *ui0_ci[32],*ui1_ci[32],*ui2_ci[32],*ui3_ci[32];
     vec_GF2 dop;
 
     mat_GF2* x =  Produce_x(); //产生0-255的输入，猜测u0可能等于0-255
@@ -92,16 +174,9 @@ void huifuSBOX()
     dfp.SetDims(1,8);
     //cout << "ceshi" <<endl;
 
-    coll();
+    //coll();
+    coll_test();
    
-    for(int k=0;k<32;k++)
-    {
-        ui0_ci[k] = ui0_xing(k);
-        ui1_ci[k] = ui1_xing(k);
-        ui2_ci[k] = ui2_xing(k);
-        ui3_ci[k] = ui3_xing(k);
-
-    }
 
 
     for(int m=0;m<32;m++)
@@ -110,10 +185,10 @@ void huifuSBOX()
         {
             for(int t=0;t<255;t++)
             {
-                um_ceshi0[m][k][t] = ui0_ci[m][t] + x[k];//1x8
-                um_ceshi1[m][k][t] = ui1_ci[m][t] + x[k];
-                um_ceshi2[m][k][t] = ui2_ci[m][t] + x[k];
-                um_ceshi3[m][k][t] = ui3_ci[m][t] + x[k];
+                um_ceshi0[m][k][t] = ui0_ci_test[m][t] + x[k];//1x8
+                um_ceshi1[m][k][t] = ui1_ci_test[m][t] + x[k];
+                um_ceshi2[m][k][t] = ui2_ci_test[m][t] + x[k];
+                um_ceshi3[m][k][t] = ui3_ci_test[m][t] + x[k];
 
             }
         }
@@ -1462,6 +1537,17 @@ void key_end()
     //cout << transpose(matGF2FromUint32(key_output[0]) ) ;
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
