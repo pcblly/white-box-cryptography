@@ -13,6 +13,8 @@ mat_GF2 * Produce_temp();
 
 void coll();
 
+void coll_test();
+
 void  huifuSBOX();
 
 void huifuSboxNi();
