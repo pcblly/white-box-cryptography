@@ -31,8 +31,6 @@ mat_GF2 aij_part(const mat_GF2& aij,const mat_GF2& M_xing,const mat_GF2& Mi,int 
 
 mat_GF2 roundF(const mat_GF2& xi0,const mat_GF2& xi1,const mat_GF2& xi2,const mat_GF2& xi3,int i,const mat_GF2& rki,const mat_GF2 * Oi);
 
-
-
 void printstate(unsigned char * in);
 
 mat_GF2 * Produce_x() ;
@@ -51,16 +49,7 @@ mat_GF2 Tbox_change(const mat_GF2& x,int i,int j,mat_GF2 rki , const mat_GF2& Ei
 
 mat_GF2 * collision_function(int i,const mat_GF2& x0,const mat_GF2& x1,const mat_GF2& x2,const mat_GF2& x3);
 
-mat_GF2 * ui0_xing(int i);
-
 mat_GF2 Sbox_change(const mat_GF2& x,int i,int j,mat_GF2 rki , const mat_GF2& Eij,const mat_GF2& Mi);
 
-mat_GF2 * ui1_xing(int i);
+mat_GF2 * collision_function_ceshi(int i,const mat_GF2& x0,const mat_GF2& x1,const mat_GF2& x2,const mat_GF2& x3);
 
-mat_GF2 * ui2_xing(int i);
-
-mat_GF2 * ui3_xing(int i);
-
-mat_GF2 ** invEij_ceshi();
-
-//void eij();
