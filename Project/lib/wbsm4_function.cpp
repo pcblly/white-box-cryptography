@@ -701,90 +701,64 @@ mat_GF2 * collision_function(int i,const mat_GF2& x0,const mat_GF2& x1,const mat
 
 
 
-mat_GF2 * ui0_xing(int i)
+
+mat_GF2 * collision_function_ceshi(int i,const mat_GF2& x0,const mat_GF2& x1,const mat_GF2& x2,const mat_GF2& x3)
+//x0 1x8
 {
-    mat_GF2* ui_ci = new mat_GF2[255];
-    //mat_GF2 output[255];
-    for(int t =1;t<256;t++)
-    {
-        ui_ci[t-1] = Sbox_xing[i][0][0] + Sbox_xing[i][0][t];
-
-    }
- 
-    return ui_ci;
- 
-}
-
-mat_GF2 * ui1_xing(int i)
-{
-    mat_GF2* ui_ci = new mat_GF2[255];
-    //mat_GF2 output[255];
-    for(int t =1;t<256;t++)
-    {
-        ui_ci[t-1] = Sbox_xing[i][1][0] + Sbox_xing[i][1][t];
-
-    }
-  
-    return ui_ci;
-  
-}
-
-mat_GF2 * ui2_xing(int i)
-{
-    mat_GF2* ui_ci = new mat_GF2[255];
-    //mat_GF2 output[255];
-    for(int t =1;t<256;t++)
-    {
-        ui_ci[t-1] = Sbox_xing[i][2][0] + Sbox_xing[i][2][t];
-
-    }
- 
-    return ui_ci;
     
-}
+    mat_GF2 Tbox_out0,Tbox_out1,Tbox_out2,Tbox_out3,dop[4],output0,output1,compare_jieguo[4],eij;
+    vec_GF2 dot[4];
+    uint8_t out11[4],out1[4];
+    //int n=4;
+    mat_GF2 *out_mat = new mat_GF2[4];
+    uint32_t in;
 
-mat_GF2 * ui3_xing(int i)
-{
-    mat_GF2* ui_ci = new mat_GF2[255];
-    for(int t =1;t<256;t++)
+    dot[0] = x0[0];
+    dot[1] = x1[0];
+    dot[2] = x2[0];
+    dot[3] = x3[0];
+    
+
+    for(int k=0;k<4;k++)
     {
-        ui_ci[t-1] = Sbox_xing[i][3][0] + Sbox_xing[i][3][t];
-
+        dot[k] = reverse(dot[k]);
+        dop[k].SetDims(1,8);
+        VectorCopy(dop[k][0],dot[k],8);
+       // cout << transpose(dop[k]) << endl;
+        //cout << uint8FromMatGF2(transpose(dop[k])) <<endl;
+        out11[k] = uint8FromMatGF2(transpose(dop[k])) ;
+        //cout << out[k] << endl;
     }
-  
-    return ui_ci;
+
+    Tbox_out0 = TBox_attack[i][0][out11[0]];
+    Tbox_out1 = TBox_attack[i][1][out11[1]];
+    Tbox_out2 = TBox_attack[i][2][out11[2]];
+    Tbox_out3 = TBox_attack[i][3][out11[3]];
+
+    output0 = Tbox_out0 + Tbox_out1 + Tbox_out2 + Tbox_out3; //1x32
+
+    //cout << "output0"<<output0 << endl;
+    
+    //cout << Sbox_xing[1][0][2] << endl;
+
+   // cout << output1 << endl;
+
+    in = uint32FromMatGF2(transpose(output0));
+   // cout << in << endl;
+    *(uint32_t *)&out1 = in;
+    for(int k=0;k<4;k++)
+    {
+        out_mat[k] = transpose(matGF2FromUint8(out1[k])) ;
+    }
+
+
+
+
+    return out_mat;//4维数组
+    
  
+
 }
-
-mat_GF2 **  invEij_ceshi()
-{
-    mat_GF2** ga = new mat_GF2* [32];
-   // mat_GF2 (*ga)[4] = new mat_GF2 [32][4];
-
-   for(int k =0;k<32;k++)
-   {
-       ga[k] = new mat_GF2 [4];
-
-   }
-
-    for(int k=0;k<32;k++)
-    {
-        for(int t =0;t<4;t++)
-        {
-            ga[k][t] = invEij_xing[k][t];
-
-        }
-    }
-
-   // cout << ga[0][0] <<endl;
-
-    return ga;
-}
-
-
-
-
-
 
 
 
