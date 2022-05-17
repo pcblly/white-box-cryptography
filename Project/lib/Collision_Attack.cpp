@@ -32,43 +32,6 @@ mat_GF2 * Produce_temp() //产生需要1-255的输入
     return array_a;
 }
 
-void coll()
-{
-    unsigned char key[16] =
-    {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0xfe,0xdc,0xba,0x98,0x76,0x54,0x32,0x10};
-    unsigned char plain[16]=
-    {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0xfe,0xdc,0xba,0x98,0x76,0x54,0x32,0x10};
-    cout << "输入密钥为:"<< endl ;
-    printstate_sm4(key);
-    mat_GF2 * Oi = oi_matrix(); 
-    wbsm4_gen(Oi,key);
-    mat_GF2* temp = Produce_temp(); 
-   // cout << temp[0] << endl;
-    uint8_t x = 0;
-    uint8_t y = 1;
-    mat_GF2 x1 = transpose(matGF2FromUint8(x));
-    //cout << x1 << endl;
-    mat_GF2 y1 = matGF2FromUint8_reverse(y);
-    //cout << y1 << endl;
-    /*
-    mat_GF2 *out_array1,*out_array2;
-
-   out_array1 = collision_function(0,y1,x1,x1,x1);
-   //cout << out_array1[0] << endl;
-   
-   for(int k=0;k<255;k++)
-   {
-       out_array2 = collision_function(0,x1,temp[k],x1,x1);
-       //cout << out_array2[0] << endl;
-       if(out_array1[0] == out_array2[0])
-       {
-           cout << temp[k] << endl;
-           break;
-       }
-       delete [] out_array2;
-   }
-   */
-}
 
 static mat_GF2 ui0_ci_test[32][255];
 static mat_GF2 ui1_ci_test[32][255];
